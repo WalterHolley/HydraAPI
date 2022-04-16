@@ -66,7 +66,7 @@ public class AIUtility {
         int pat3 = 0;
         int pat4 = 0;
         int pat5 = 0;
-        int win = 0;
+        int win;
         while (true) {
             pat1 = 0;
             pat2 = 0;
@@ -136,15 +136,18 @@ public class AIUtility {
                 else
                     playerhp = playerhp + 10;
             } else if (playerhp <= 95) {
-                System.out.println("2) Heal for 10 hp");
+                System.out.println("2) Heal for 5 hp");
                 System.out.println("What is your move(1 or 2):");
                 int move = scanner.nextInt();
                 if (move == 1)
                     hydrahp = hydrahp - 10;
                 else
                     playerhp = playerhp + 5;
+            } else {
+                int move = scanner.nextInt();
+                if (move == 1)
+                    hydrahp = hydrahp - 10;
             }
-
         } else {
             System.out.println("The hydra has attacked you for 5 damage");
             playerhp = playerhp - 10;
@@ -241,6 +244,10 @@ public class AIUtility {
                     hydrahp = hydrahp - 10;
                 else
                     playerhp = playerhp + 5;
+            }else {
+                int move = scanner.nextInt();
+                if (move == 1)
+                    hydrahp = hydrahp - 10;
             }
 
         } else {
@@ -345,6 +352,10 @@ public class AIUtility {
                     hydrahp = hydrahp - 10;
                 else
                     playerhp = playerhp + 5;
+            } else {
+                int move = scanner.nextInt();
+                if (move == 1)
+                    hydrahp = hydrahp - 10;
             }
 
         } else {
