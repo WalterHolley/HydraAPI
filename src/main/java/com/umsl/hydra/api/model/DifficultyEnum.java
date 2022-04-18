@@ -1,5 +1,9 @@
 package com.umsl.hydra.api.model;
 
+/**
+ * DifficultyEnum.java
+ * an enumerated type that represents a game difficulty selection
+ */
 public enum DifficultyEnum {
     EASY(1),
     NORMAL(2),

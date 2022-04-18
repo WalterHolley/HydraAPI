@@ -1,5 +1,9 @@
 package com.umsl.hydra.api.model;
 
+/**
+ * StartGameRequest.java
+ * model for starting a new game session
+ */
 public class StartGameRequest {
     private int _difficulty;
     private DifficultyEnum _difficultyEnum;

@@ -1,5 +1,10 @@
 package com.umsl.hydra.api.model;
 
+/**
+ * StartResponse.java
+ * model for message to be sent after a new game is
+ * initiated
+ */
 public class StartResponse {
     private String _hashCode;
 
