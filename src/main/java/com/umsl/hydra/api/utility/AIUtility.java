@@ -2,17 +2,26 @@ package com.umsl.hydra.api.utility;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.lang.Math;
+import java.util.regex.Matcher;
 
 public class AIUtility {
     public static void playagain() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Would you like to play again? (y/n):");
-        char playagain = scanner.next().charAt(0);
-        if (playagain == 'y')
-            main(null);
-        else
-            System.exit(0);
-
+        boolean valid = true;
+        while (valid) {
+            System.out.println("Would you like to play again? (y/n):");
+            try {
+                Scanner scanner = new Scanner(System.in);
+                char playagain = scanner.next().charAt(0);
+                if (playagain == 'y')
+                    main(null);
+                else if (playagain == 'n')
+                    System.exit(0);
+                else
+                    System.out.println("please enter a y or n");
+            } catch (InputMismatchException exception) {
+                System.out.println("Invalid, please enter a y or n: ");
+            }
+        }
     }
 
     public static void roundstart(int difficulty, int hydrahp, int playerhp, int count) {
@@ -28,132 +37,160 @@ public class AIUtility {
         System.out.println("Your health: " + playerhp);
         System.out.println("Hydra health: " + hydrahp);
         if (difficulty == 1 || difficulty == 2) {
-            System.out.println("Please choose your 3 coin pattern: ");
-            Scanner scanner = new Scanner(System.in);
-            int first = scanner.nextInt();
-            int second = scanner.nextInt();
-            int third = scanner.nextInt();
-
-            System.out.println("Your pattern is: " + first + " " + second + " " + third);
-             if (difficulty == 1) {
-                difficulty1(first, second, third, hydrahp, playerhp, difficulty, count);
-            } else {
-                difficulty2(first, second, third, hydrahp, playerhp, difficulty, count);
+            boolean valid = true;
+            while (valid) {
+                try {
+                    System.out.println("Please choose your 3 coin pattern: ");
+                    Scanner scanner = new Scanner(System.in);
+                    int first = scanner.nextInt();
+                    int second = scanner.nextInt();
+                    int third = scanner.nextInt();
+                    if ((first != 1 && first != 2) || (second != 1 && second != 2) || (third != 1 && third != 2))
+                        System.out.println("Invalid, please ensure all numbers are a 1 or 2: ");
+                    else {
+                        System.out.println("Your pattern is: " + first + " " + second + " " + third);
+                        if (difficulty == 1) {
+                            difficulty1(first, second, third, hydrahp, playerhp, difficulty, count);
+                        } else {
+                            difficulty2(first, second, third, hydrahp, playerhp, difficulty, count);
+                        }
+                    }
+                } catch (InputMismatchException exception) {
+                    System.out.println("Invalid, please ensure all numbers are a 1 or 2: ");
+                }
             }
         } else {
-                difficulty0(hydrahp, playerhp, difficulty, count);
+            difficulty0(hydrahp, playerhp, difficulty, count);
         }
     }
 
     public static void difficulty0(int hydrahp, int playerhp, int difficulty, int count) {
-       System.out.println("The hydra will pick its pattern first.");
+        System.out.println("The hydra will pick its pattern first.");
         int aifirst = (int) (Math.random() * 2 + 1);
         int aisecond = (int) (Math.random() * 2 + 1);
         int aithird = (int) (Math.random() * 2 + 1);
-       System.out.println("The hydras pattern is: " + aifirst + " " + aisecond + " " + aithird);
+        System.out.println("The hydras pattern is: " + aifirst + " " + aisecond + " " + aithird);
 
-       System.out.println("Now pick your pattern: ");
-       Scanner scanner = new Scanner(System.in);
-        int first = scanner.nextInt();
-        int second = scanner.nextInt();
-        int third = scanner.nextInt();
-
-        System.out.println("Your pattern is: " + first + " " + second + " " + third);
-        System.out.println("Randomly tossed coins: ");
-        int cpat = 3;
-        int pat1;
-        int pat2;
-        int pat3 = 0;
-        int pat4 = 0;
-        int pat5 = 0;
-        int win;
-        while (true) {
-            pat1 = 0;
-            pat2 = 0;
-            if (cpat == 3) {
-                pat3 = (int) (Math.random() * 2 + 1);
-                pat4 = (int) (Math.random() * 2 + 1);
-                pat5 = (int) (Math.random() * 2 + 1);
-                System.out.print(pat3 + " " + pat4 + " " + pat5 + " ");
-            } else if (cpat == 4) {
-                pat1 = pat4;
-                pat2 = pat5;
-                pat3 = (int) (Math.random() * 2 + 1);
-                pat4 = (int) (Math.random() * 2 + 1);
-                pat5 = (int) (Math.random() * 2 + 1);
-                System.out.print(pat3 + " " + pat4 + " " + pat5 + " ");
-            } else if (cpat > 5) {
-                pat1 = pat4;
-                pat2 = pat5;
-                pat3 = (int) (Math.random() * 2 + 1);
-                pat4 = (int) (Math.random() * 2 + 1);
-                pat5 = (int) (Math.random() * 2 + 1);
-                System.out.print(pat3 + " " + pat4 + " " + pat5 + " ");
-            }
-            cpat++;
-            if (pat1 == first && pat2 == second && pat3 == third) {
-                System.out.println("");
-                System.out.println("You have won this round");
-                win = 0;
-                break;
-            } else if (pat1 == aifirst && pat2 == aisecond && pat3 == aithird) {
-                System.out.println("");
-                System.out.println("The hydra won this round");
-                win = 1;
-                break;
-            } else if (pat2 == first && pat3 == second && pat4 == third) {
-                System.out.println("");
-                System.out.println("You have won this round");
-                win = 0;
-                break;
-            } else if (pat2 == aifirst && pat3 == aisecond && pat4 == aithird) {
-                System.out.println("");
-                System.out.println("The hydra won this round");
-                win = 1;
-                break;
-            } else if (pat3 == first && pat4 == second && pat5 == third) {
-                System.out.println("");
-                System.out.println("You have won this round");
-                win = 0;
-                break;
-            } else if (pat3 == aifirst && pat4 == aisecond && pat5 == aithird) {
-                System.out.println("");
-                System.out.println("The hydra won this round");
-                win = 1;
-                break;
+        System.out.println("Now pick your pattern: ");
+        boolean valid = true;
+        int first = 0;
+        int second = 0;
+        int third = 0;
+        while (valid) {
+            Scanner scanner = new Scanner(System.in);
+            try {
+                first = scanner.nextInt();
+                second = scanner.nextInt();
+                third = scanner.nextInt();
+                if ((first != 1 && first != 2) || (second != 1 && second != 2) || (third != 1 && third != 2)) {
+                    System.out.println("Invalid, please ensure all numbers are a 1 or 2: ");
+                }else
+                    break;
+                    //valid = false;
+            } catch (InputMismatchException exception) {
+                System.out.println("Invalid, please ensure all numbers are a 1 or 2: ");
             }
         }
-        if (win == 0) {
-            System.out.println("You have won and can choose a move");
-            System.out.println("Moves:");
-            System.out.println("1) Attack the hydra for 10 hp");
-            if (playerhp <= 90) {
-                System.out.println("2) Heal for 10 hp");
-                System.out.println("What is your move(1 or 2):");
-                int move = scanner.nextInt();
-                if (move == 1)
-                    hydrahp = hydrahp - 10;
-                else
-                    playerhp = playerhp + 10;
-            } else if (playerhp <= 95) {
-                System.out.println("2) Heal for 5 hp");
-                System.out.println("What is your move(1 or 2):");
-                int move = scanner.nextInt();
-                if (move == 1)
-                    hydrahp = hydrahp - 10;
-                else
-                    playerhp = playerhp + 5;
-            } else {
-                int move = scanner.nextInt();
-                if (move == 1)
-                    hydrahp = hydrahp - 10;
-            }
-        } else {
-            System.out.println("The hydra has attacked you for 5 damage");
-            playerhp = playerhp - 10;
+                System.out.println("Your pattern is: " + first + " " + second + " " + third);
+                System.out.println("Randomly tossed coins: ");
+        Scanner scanner = new Scanner(System.in);
+                int cpat = 3;
+                int pat1;
+                int pat2;
+                int pat3 = 0;
+                int pat4 = 0;
+                int pat5 = 0;
+                int win;
+                while (true) {
+                    pat1 = 0;
+                    pat2 = 0;
+                    if (cpat == 3) {
+                        pat3 = (int) (Math.random() * 2 + 1);
+                        pat4 = (int) (Math.random() * 2 + 1);
+                        pat5 = (int) (Math.random() * 2 + 1);
+                        System.out.print(pat3 + " " + pat4 + " " + pat5 + " ");
+                    } else if (cpat == 4) {
+                        pat1 = pat4;
+                        pat2 = pat5;
+                        pat3 = (int) (Math.random() * 2 + 1);
+                        pat4 = (int) (Math.random() * 2 + 1);
+                        pat5 = (int) (Math.random() * 2 + 1);
+                        System.out.print(pat3 + " " + pat4 + " " + pat5 + " ");
+                    } else if (cpat > 5) {
+                        pat1 = pat4;
+                        pat2 = pat5;
+                        pat3 = (int) (Math.random() * 2 + 1);
+                        pat4 = (int) (Math.random() * 2 + 1);
+                        pat5 = (int) (Math.random() * 2 + 1);
+                        System.out.print(pat3 + " " + pat4 + " " + pat5 + " ");
+                    }
+                    cpat++;
+                    if (pat1 == first && pat2 == second && pat3 == third) {
+                        System.out.println("");
+                        System.out.println("You have won this round");
+                        win = 0;
+                        break;
+                    } else if (pat1 == aifirst && pat2 == aisecond && pat3 == aithird) {
+                        System.out.println("");
+                        System.out.println("The hydra won this round");
+                        win = 1;
+                        break;
+                    } else if (pat2 == first && pat3 == second && pat4 == third) {
+                        System.out.println("");
+                        System.out.println("You have won this round");
+                        win = 0;
+                        break;
+                    } else if (pat2 == aifirst && pat3 == aisecond && pat4 == aithird) {
+                        System.out.println("");
+                        System.out.println("The hydra won this round");
+                        win = 1;
+                        break;
+                    } else if (pat3 == first && pat4 == second && pat5 == third) {
+                        System.out.println("");
+                        System.out.println("You have won this round");
+                        win = 0;
+                        break;
+                    } else if (pat3 == aifirst && pat4 == aisecond && pat5 == aithird) {
+                        System.out.println("");
+                        System.out.println("The hydra won this round");
+                        win = 1;
+                        break;
+                    }
+                }
+                if (win == 0) {
+                    System.out.println("You have won and can choose a move");
+                    System.out.println("Moves:");
+                    System.out.println("1) Attack the hydra for 10 hp");
+                    if (playerhp <= 90) {
+                        System.out.println("2) Heal for 10 hp");
+                        System.out.println("What is your move(1 or 2):");
+                        int move = scanner.nextInt();
+                        if (move == 1)
+                            hydrahp = hydrahp - 10;
+                        else
+                            playerhp = playerhp + 10;
+                    } else if (playerhp <= 95) {
+                        System.out.println("2) Heal for 5 hp");
+                        System.out.println("What is your move(1 or 2):");
+                        int move = scanner.nextInt();
+                        if (move == 1)
+                            hydrahp = hydrahp - 10;
+                        else
+                            playerhp = playerhp + 5;
+                    } else {
+                        int move = scanner.nextInt();
+                        if (move == 1)
+                            hydrahp = hydrahp - 10;
+                    }
+                } else {
+                    System.out.println("The hydra has attacked you for 5 damage");
+                    playerhp = playerhp - 10;
+                }
+                roundstart(difficulty, hydrahp, playerhp, count);
+
+
         }
-        roundstart(difficulty, hydrahp, playerhp, count);
-    }
+
     public static void difficulty1(int first, int second, int third, int hydrahp, int playerhp, int difficulty, int count) {
         Scanner scanner = new Scanner(System.in);
         int aifirst = (int) (Math.random() * 2 + 1);
@@ -360,7 +397,7 @@ public class AIUtility {
 
         } else {
             System.out.println("The hydra has attacked you for 5 damage");
-            playerhp = playerhp - 10;
+            playerhp = playerhp - 25;
         }
         roundstart(difficulty, hydrahp, playerhp, count);
     }
