@@ -2,10 +2,10 @@ package com.umsl.hydra.api.utility;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.lang.Math;
-import java.util.regex.Matcher;
 
 public class AIUtility {
     public static void playagain() {
+
         boolean valid = true;
         while (valid) {
             System.out.println("Would you like to play again? (y/n):");
@@ -157,37 +157,64 @@ public class AIUtility {
                         break;
                     }
                 }
-                if (win == 0) {
-                    System.out.println("You have won and can choose a move");
-                    System.out.println("Moves:");
+        if (win == 0) {
+            System.out.println("You have won and can choose a move");
+            System.out.println("Moves:");
+            valid = true;
+            while (valid) {
+                try {
+                    int move = 0;
                     System.out.println("1) Attack the hydra for 10 hp");
                     if (playerhp <= 90) {
                         System.out.println("2) Heal for 10 hp");
                         System.out.println("What is your move(1 or 2):");
-                        int move = scanner.nextInt();
-                        if (move == 1)
-                            hydrahp = hydrahp - 10;
-                        else
-                            playerhp = playerhp + 10;
+                        move = scanner.nextInt();
+                        if (move != 1 && move != 2)
+                            System.out.println("Please enter a 1 or 2: ");
+                        else {
+                            valid = false;
+                            if (move == 1)
+                                hydrahp = hydrahp - 10;
+                            else
+                                playerhp = playerhp + 10;
+                        }
                     } else if (playerhp <= 95) {
                         System.out.println("2) Heal for 5 hp");
                         System.out.println("What is your move(1 or 2):");
-                        int move = scanner.nextInt();
-                        if (move == 1)
-                            hydrahp = hydrahp - 10;
-                        else
-                            playerhp = playerhp + 5;
+                        move = scanner.nextInt();
+                        if (move != 1 && move != 2)
+                            System.out.println("Please enter a 1 or 2: ");
+                        else {
+                            valid = false;
+                            if (move == 1)
+                                hydrahp = hydrahp - 10;
+                            else
+                                playerhp = playerhp + 5;
+                        }
                     } else {
-                        int move = scanner.nextInt();
-                        if (move == 1)
-                            hydrahp = hydrahp - 10;
+                        move = scanner.nextInt();
+                        if (move != 1)
+                            System.out.println("Please enter a 1 or 2: ");
+                        else {
+                            valid = false;
+                            if (move == 1)
+                                hydrahp = hydrahp - 10;
+                        }
                     }
-                } else {
-                    System.out.println("The hydra has attacked you for 5 damage");
-                    playerhp = playerhp - 10;
-                }
-                roundstart(difficulty, hydrahp, playerhp, count);
 
+                } catch (InputMismatchException exception) {
+                    scanner.next();
+                    System.out.println("Invalid, please enter a 1: ");
+
+                }
+
+            }
+
+        } else {
+            System.out.println("The hydra has attacked you for 5 damage");
+            playerhp = playerhp - 25;
+        }
+        roundstart(difficulty, hydrahp, playerhp, count);
 
         }
 
@@ -264,32 +291,59 @@ public class AIUtility {
         if (win == 0) {
             System.out.println("You have won and can choose a move");
             System.out.println("Moves:");
-            System.out.println("1) Attack the hydra for 10 hp");
-            if (playerhp <= 90) {
-                System.out.println("2) Heal for 10 hp");
-                System.out.println("What is your move(1 or 2):");
-                int move = scanner.nextInt();
-                if (move == 1)
-                    hydrahp = hydrahp - 10;
-                else
-                    playerhp = playerhp + 10;
-            } else if (playerhp <= 95) {
-                System.out.println("2) Heal for 10 hp");
-                System.out.println("What is your move(1 or 2):");
-                int move = scanner.nextInt();
-                if (move == 1)
-                    hydrahp = hydrahp - 10;
-                else
-                    playerhp = playerhp + 5;
-            }else {
-                int move = scanner.nextInt();
-                if (move == 1)
-                    hydrahp = hydrahp - 10;
+            boolean valid = true;
+            while (valid) {
+                try {
+                    int move = 0;
+                    System.out.println("1) Attack the hydra for 10 hp");
+                    if (playerhp <= 90) {
+                        System.out.println("2) Heal for 10 hp");
+                        System.out.println("What is your move(1 or 2):");
+                        move = scanner.nextInt();
+                        if (move != 1 && move != 2)
+                            System.out.println("Please enter a 1 or 2: ");
+                        else {
+                            valid = false;
+                            if (move == 1)
+                                hydrahp = hydrahp - 10;
+                            else
+                                playerhp = playerhp + 10;
+                        }
+                    } else if (playerhp <= 95) {
+                        System.out.println("2) Heal for 5 hp");
+                        System.out.println("What is your move(1 or 2):");
+                        move = scanner.nextInt();
+                        if (move != 1 && move != 2)
+                            System.out.println("Please enter a 1 or 2: ");
+                        else {
+                            valid = false;
+                            if (move == 1)
+                                hydrahp = hydrahp - 10;
+                            else
+                                playerhp = playerhp + 5;
+                        }
+                    } else {
+                        move = scanner.nextInt();
+                        if (move != 1)
+                            System.out.println("Please enter a 1: ");
+                        else {
+                            valid = false;
+                            if (move == 1)
+                                hydrahp = hydrahp - 10;
+                        }
+                    }
+
+                } catch (InputMismatchException exception) {
+                    scanner.next();
+                    System.out.println("Invalid, please enter a valid input: ");
+
+                }
+
             }
 
         } else {
             System.out.println("The hydra has attacked you for 5 damage");
-            playerhp = playerhp - 10;
+            playerhp = playerhp - 25;
         }
         roundstart(difficulty, hydrahp, playerhp, count);
     }
@@ -372,27 +426,54 @@ public class AIUtility {
         if (win == 0) {
             System.out.println("You have won and can choose a move");
             System.out.println("Moves:");
-            System.out.println("1) Attack the hydra for 10 hp");
-            if (playerhp <= 90) {
-                System.out.println("2) Heal for 10 hp");
-                System.out.println("What is your move(1 or 2):");
-                int move = scanner.nextInt();
-                if (move == 1)
-                    hydrahp = hydrahp - 10;
-                else
-                    playerhp = playerhp + 10;
-            } else if (playerhp <= 95) {
-                System.out.println("2) Heal for 10 hp");
-                System.out.println("What is your move(1 or 2):");
-                int move = scanner.nextInt();
-                if (move == 1)
-                    hydrahp = hydrahp - 10;
-                else
-                    playerhp = playerhp + 5;
-            } else {
-                int move = scanner.nextInt();
-                if (move == 1)
-                    hydrahp = hydrahp - 10;
+            boolean valid = true;
+            while (valid) {
+                try {
+                    int move = 0;
+                    System.out.println("1) Attack the hydra for 10 hp");
+                    if (playerhp <= 90) {
+                        System.out.println("2) Heal for 10 hp");
+                        System.out.println("What is your move(1 or 2):");
+                        move = scanner.nextInt();
+                        if (move != 1 && move != 2)
+                            System.out.println("Please enter a 1 or 2: ");
+                        else {
+                            valid = false;
+                            if (move == 1)
+                                hydrahp = hydrahp - 10;
+                            else
+                                playerhp = playerhp + 10;
+                        }
+                    } else if (playerhp <= 95) {
+                        System.out.println("2) Heal for 5 hp");
+                        System.out.println("What is your move(1 or 2):");
+                        move = scanner.nextInt();
+                        if (move != 1 && move != 2)
+                            System.out.println("Please enter a 1 or 2: ");
+                        else {
+                            valid = false;
+                            if (move == 1)
+                                hydrahp = hydrahp - 10;
+                            else
+                                playerhp = playerhp + 5;
+                        }
+                    } else {
+                        move = scanner.nextInt();
+                        if (move != 1)
+                            System.out.println("Please enter a 1: ");
+                        else {
+                            valid = false;
+                            if (move == 1)
+                                hydrahp = hydrahp - 10;
+                        }
+                    }
+
+                } catch (InputMismatchException exception) {
+                    scanner.next();
+                    System.out.println("Invalid, please enter a 1 or 2: ");
+
+                }
+
             }
 
         } else {
@@ -401,7 +482,6 @@ public class AIUtility {
         }
         roundstart(difficulty, hydrahp, playerhp, count);
     }
-
 
     public static void main(String[] args) {
         System.out.print("Please select difficulty(0-2): ");
