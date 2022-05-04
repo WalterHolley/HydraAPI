@@ -4,67 +4,62 @@ import java.util.Scanner;
 import java.lang.Math;
 
 public class AIUtility {
-    public static void playagain() {
-
-        boolean valid = true;
-        while (valid) {
-            System.out.println("Would you like to play again? (y/n):");
-            try {
-                Scanner scanner = new Scanner(System.in);
-                char playagain = scanner.next().charAt(0);
-                if (playagain == 'y')
-                    main(null);
-                else if (playagain == 'n')
-                    System.exit(0);
-                else
-                    System.out.println("please enter a y or n");
-            } catch (InputMismatchException exception) {
-                System.out.println("Invalid, please enter a y or n: ");
-            }
-        }
-    }
-
-    public static void roundstart(int difficulty, int hydrahp, int playerhp, int count) {
+    public static int[] roundstart(int hydrahp, int playerhp, int count, char playagain) {
+        int[] again = new int[1];
         if (hydrahp == 0) {
             System.out.println("Congradulations! You beat the hydra in " + count + " rounds!");
-            playagain();
+            boolean valid = true;
+            while (valid) {
+                System.out.println("Would you like to play again? (y/n):");
+                try {
+                    if (playagain == 'y'){
+                        again[0] = 1;
+                        return again;
+                    }
+                    else if (playagain == 'n') {
+                        again[0] = 0;
+                        return again;
+                    }
+                    else
+                        System.out.println("please enter a y or n");
+                } catch (InputMismatchException exception) {
+                    System.out.println("Invalid, please enter a y or n: ");
+                }
+            }
         } else if (playerhp == 0) {
             System.out.println("The hydra has bested you. You survived " + count + " rounds against the beast.");
-            playagain();
+            boolean valid = true;
+            while (valid) {
+                System.out.println("Would you like to play again? (y/n):");
+                try {
+                    if (playagain == 'y'){
+                        again[0] = 1;
+                        return again;
+                    }
+                    else if (playagain == 'n') {
+                        again[0] = 0;
+                        return again;
+                    }
+                    else
+                        System.out.println("please enter a y or n");
+                } catch (InputMismatchException exception) {
+                    System.out.println("Invalid, please enter a y or n: ");
+                }
+            }
         }
         count++;
         System.out.println("\nRound: " + count);
         System.out.println("Your health: " + playerhp);
         System.out.println("Hydra health: " + hydrahp);
-        if (difficulty == 1 || difficulty == 2) {
-            boolean valid = true;
-            while (valid) {
-                try {
-                    System.out.println("Please choose your 3 coin pattern: ");
-                    Scanner scanner = new Scanner(System.in);
-                    int first = scanner.nextInt();
-                    int second = scanner.nextInt();
-                    int third = scanner.nextInt();
-                    if ((first != 1 && first != 2) || (second != 1 && second != 2) || (third != 1 && third != 2))
-                        System.out.println("Invalid, please ensure all numbers are a 1 or 2: ");
-                    else {
-                        System.out.println("Your pattern is: " + first + " " + second + " " + third);
-                        if (difficulty == 1) {
-                            difficulty1(first, second, third, hydrahp, playerhp, difficulty, count);
-                        } else {
-                            difficulty2(first, second, third, hydrahp, playerhp, difficulty, count);
-                        }
-                    }
-                } catch (InputMismatchException exception) {
-                    System.out.println("Invalid, please ensure all numbers are a 1 or 2: ");
-                }
-            }
-        } else {
-            difficulty0(hydrahp, playerhp, difficulty, count);
-        }
+
+        int[] roundstart = new int[3];
+        roundstart[0] = hydrahp;
+        roundstart[1] = playerhp;
+        roundstart[2] = count;
+        return roundstart;
     }
 
-    public static void difficulty0(int hydrahp, int playerhp, int difficulty, int count) {
+    public static int[] difficulty0(int hydrahp, int playerhp, int first, int second, int third, int move) {
         System.out.println("The hydra will pick its pattern first.");
         int aifirst = (int) (Math.random() * 2 + 1);
         int aisecond = (int) (Math.random() * 2 + 1);
@@ -73,27 +68,18 @@ public class AIUtility {
 
         System.out.println("Now pick your pattern: ");
         boolean valid = true;
-        int first = 0;
-        int second = 0;
-        int third = 0;
         while (valid) {
-            Scanner scanner = new Scanner(System.in);
             try {
-                first = scanner.nextInt();
-                second = scanner.nextInt();
-                third = scanner.nextInt();
                 if ((first != 1 && first != 2) || (second != 1 && second != 2) || (third != 1 && third != 2)) {
                     System.out.println("Invalid, please ensure all numbers are a 1 or 2: ");
                 }else
                     break;
-                    //valid = false;
             } catch (InputMismatchException exception) {
                 System.out.println("Invalid, please ensure all numbers are a 1 or 2: ");
             }
         }
                 System.out.println("Your pattern is: " + first + " " + second + " " + third);
                 System.out.println("Randomly tossed coins: ");
-        Scanner scanner = new Scanner(System.in);
                 int cpat = 3;
                 int pat1;
                 int pat2;
@@ -163,12 +149,10 @@ public class AIUtility {
             valid = true;
             while (valid) {
                 try {
-                    int move = 0;
                     System.out.println("1) Attack the hydra for 10 hp");
                     if (playerhp <= 90) {
                         System.out.println("2) Heal for 10 hp");
                         System.out.println("What is your move(1 or 2):");
-                        move = scanner.nextInt();
                         if (move != 1 && move != 2)
                             System.out.println("Please enter a 1 or 2: ");
                         else {
@@ -181,7 +165,6 @@ public class AIUtility {
                     } else if (playerhp <= 95) {
                         System.out.println("2) Heal for 5 hp");
                         System.out.println("What is your move(1 or 2):");
-                        move = scanner.nextInt();
                         if (move != 1 && move != 2)
                             System.out.println("Please enter a 1 or 2: ");
                         else {
@@ -192,7 +175,6 @@ public class AIUtility {
                                 playerhp = playerhp + 5;
                         }
                     } else {
-                        move = scanner.nextInt();
                         if (move != 1)
                             System.out.println("Please enter a 1 or 2: ");
                         else {
@@ -203,7 +185,6 @@ public class AIUtility {
                     }
 
                 } catch (InputMismatchException exception) {
-                    scanner.next();
                     System.out.println("Invalid, please enter a 1: ");
 
                 }
@@ -214,12 +195,13 @@ public class AIUtility {
             System.out.println("The hydra has attacked you for 5 damage");
             playerhp = playerhp - 25;
         }
-        roundstart(difficulty, hydrahp, playerhp, count);
-
+        int[] difficulty0 = new int[2];
+        difficulty0[0] = playerhp;
+        difficulty0[1] = hydrahp;
+        return difficulty0;
         }
 
-    public static void difficulty1(int first, int second, int third, int hydrahp, int playerhp, int difficulty, int count) {
-        Scanner scanner = new Scanner(System.in);
+    public static int[] difficulty1(int hydrahp, int playerhp, int first, int second, int third, int move) {
         int aifirst = (int) (Math.random() * 2 + 1);
         int aisecond = (int) (Math.random() * 2 + 1);
         int aithird = (int) (Math.random() * 2 + 1);
@@ -294,12 +276,10 @@ public class AIUtility {
             boolean valid = true;
             while (valid) {
                 try {
-                    int move = 0;
                     System.out.println("1) Attack the hydra for 10 hp");
                     if (playerhp <= 90) {
                         System.out.println("2) Heal for 10 hp");
                         System.out.println("What is your move(1 or 2):");
-                        move = scanner.nextInt();
                         if (move != 1 && move != 2)
                             System.out.println("Please enter a 1 or 2: ");
                         else {
@@ -312,7 +292,6 @@ public class AIUtility {
                     } else if (playerhp <= 95) {
                         System.out.println("2) Heal for 5 hp");
                         System.out.println("What is your move(1 or 2):");
-                        move = scanner.nextInt();
                         if (move != 1 && move != 2)
                             System.out.println("Please enter a 1 or 2: ");
                         else {
@@ -323,7 +302,6 @@ public class AIUtility {
                                 playerhp = playerhp + 5;
                         }
                     } else {
-                        move = scanner.nextInt();
                         if (move != 1)
                             System.out.println("Please enter a 1: ");
                         else {
@@ -334,7 +312,6 @@ public class AIUtility {
                     }
 
                 } catch (InputMismatchException exception) {
-                    scanner.next();
                     System.out.println("Invalid, please enter a valid input: ");
 
                 }
@@ -345,9 +322,12 @@ public class AIUtility {
             System.out.println("The hydra has attacked you for 5 damage");
             playerhp = playerhp - 25;
         }
-        roundstart(difficulty, hydrahp, playerhp, count);
+        int[] difficulty1 = new int[2];
+        difficulty1[0] = playerhp;
+        difficulty1[1] = hydrahp;
+        return difficulty1;
     }
-    public static void difficulty2(int first, int second, int third, int hydrahp, int playerhp, int difficulty, int count) {
+    public static int[] difficulty2(int hydrahp, int playerhp, int first, int second, int third, int move) {
         Scanner scanner = new Scanner(System.in);
         int aifirst;
         if (second == 1) {
@@ -429,12 +409,10 @@ public class AIUtility {
             boolean valid = true;
             while (valid) {
                 try {
-                    int move = 0;
                     System.out.println("1) Attack the hydra for 10 hp");
                     if (playerhp <= 90) {
                         System.out.println("2) Heal for 10 hp");
                         System.out.println("What is your move(1 or 2):");
-                        move = scanner.nextInt();
                         if (move != 1 && move != 2)
                             System.out.println("Please enter a 1 or 2: ");
                         else {
@@ -447,7 +425,6 @@ public class AIUtility {
                     } else if (playerhp <= 95) {
                         System.out.println("2) Heal for 5 hp");
                         System.out.println("What is your move(1 or 2):");
-                        move = scanner.nextInt();
                         if (move != 1 && move != 2)
                             System.out.println("Please enter a 1 or 2: ");
                         else {
@@ -458,7 +435,6 @@ public class AIUtility {
                                 playerhp = playerhp + 5;
                         }
                     } else {
-                        move = scanner.nextInt();
                         if (move != 1)
                             System.out.println("Please enter a 1: ");
                         else {
@@ -469,7 +445,6 @@ public class AIUtility {
                     }
 
                 } catch (InputMismatchException exception) {
-                    scanner.next();
                     System.out.println("Invalid, please enter a 1 or 2: ");
 
                 }
@@ -480,17 +455,19 @@ public class AIUtility {
             System.out.println("The hydra has attacked you for 5 damage");
             playerhp = playerhp - 25;
         }
-        roundstart(difficulty, hydrahp, playerhp, count);
+        int[] difficulty2 = new int[2];
+        difficulty2[0] = playerhp;
+        difficulty2[1] = hydrahp;
+        return difficulty2;
     }
 
-    public static void main(String[] args) {
-        System.out.print("Please select difficulty(0-2): ");
-        int difficulty = 0;
+    public static int[] driver(int difficulty) {
+        int hydrahp = 100;
+        int playerhp = 100;
+        int count = 0;
         boolean valid = true;
         while (valid) {
             try {
-                Scanner scanner = new Scanner(System.in);
-                difficulty = scanner.nextInt();
                     if (difficulty < 3 && difficulty >= 0) {
                         if (difficulty == 0) {
                             System.out.println("You have selected easy as your difficulty");
@@ -499,12 +476,7 @@ public class AIUtility {
                         } else {
                             System.out.println("You have selected hard as your difficulty");
                         }
-                        int hydrahp = 100;
-                        int playerhp = 100;
-                        int count = 0;
                         valid = false;
-                        roundstart(difficulty, hydrahp, playerhp, count);
-
                     }
                     else
                         System.out.println("Please enter 0, 1, or 2 to select your difficulty: ");
@@ -513,5 +485,10 @@ public class AIUtility {
                 System.out.println("Invalid, please enter a number between 0 and 2: ");
             }
         }
+        int[] driver = new int[3];
+        driver[0] = hydrahp;
+        driver[1] = playerhp;
+        driver[2] = count;
+    return driver;
     }
 }
