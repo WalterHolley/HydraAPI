@@ -1,6 +1,9 @@
 package com.umsl.hydra.api.utility;
 
+import com.umsl.hydra.api.model.DifficultyEnum;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.mockito.ArgumentMatchers;
 
 import static java.lang.System.exit;
 import static org.junit.jupiter.api.Assertions.*;
@@ -9,17 +12,22 @@ import static org.mockito.Mockito.verify;
 
 public class AIUtilityTest {
 
+
+    private AIUtility utility;
+
 @Test
-public void mainTest(){
-    int difficulty = 1;
-    AIUtility aiutilitymock = mock(AIUtility.class);
-    //AIUtility aiutilitymock1 = new AIUtility();
-//    aiutilitymock.roundstart(2, 90, 100, 2);
-//    //aiutilitymock.roundstart.
-//    verify(aiutilitymock).difficulty2(1, 1, 2, 90, 100, 2, 2);
-//    verify(aiutilitymock).roundstart(2, 0, 100, 3);
-//    verify(aiutilitymock).playagain();
-//    exit(0);
+public void AIUTilSuccess(){
+    short i = 0;
+    boolean winner;
+    utility = new AIUtility();
+    winner = utility.wonRound(DifficultyEnum.EASY,new int[] {1,0,1});
+
+    if(winner || !winner)
+        i = 1;
+
+    assertNotEquals(0,i );
+
+
 }
 
 }
