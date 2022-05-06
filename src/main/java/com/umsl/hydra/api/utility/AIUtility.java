@@ -328,7 +328,6 @@ public class AIUtility {
         return difficulty1;
     }
     public static int[] difficulty2(int hydrahp, int playerhp, int first, int second, int third, int move) {
-        Scanner scanner = new Scanner(System.in);
         int aifirst;
         if (second == 1) {
             aifirst = 2;

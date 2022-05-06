@@ -15,6 +15,8 @@ public class AIUtilityLib {
     playerhplib = driverlib[1];
     countlib = driverlib[2];
     int[] libarr;
+    int[] diffarr;
+
     while (true) {
         libarr = library.roundstart(hydrahplib, playerhplib, countlib, playagainlib);
         hydrahplib = libarr[0];
@@ -25,19 +27,19 @@ public class AIUtilityLib {
             break;
 
         if (difficulty == 0){
-            hydrahplib = library.difficulty0(hydrahplib, playerhplib, first, second, third, move)[0];
-            playerhplib = library.difficulty0(hydrahplib, playerhplib, first, second, third, move)[1];
-            countlib = library.difficulty0(hydrahplib, playerhplib, first, second, third, move)[2];
+            diffarr = library.difficulty0(hydrahplib, playerhplib, first, second, third, move);
+            hydrahplib = diffarr[1];
+            playerhplib = diffarr[0];
         }
         else if (difficulty == 1){
-            hydrahplib = library.difficulty1(hydrahplib, playerhplib, first, second, third, move)[0];
-            playerhplib = library.difficulty1(hydrahplib, playerhplib, first, second, third, move)[1];
-            countlib = library.difficulty1(hydrahplib, playerhplib, first, second, third, move)[2];
+            diffarr = library.difficulty1(hydrahplib, playerhplib, first, second, third, move);
+            hydrahplib = diffarr[1];
+            playerhplib = diffarr[0];
         }
         else if (difficulty == 2){
-            hydrahplib = library.difficulty2(hydrahplib, playerhplib, first, second, third, move)[0];
-            playerhplib = library.difficulty2(hydrahplib, playerhplib, first, second, third, move)[1];
-            countlib = library.difficulty2(hydrahplib, playerhplib, first, second, third, move)[2];
+            diffarr = library.difficulty2(hydrahplib, playerhplib, first, second, third, move);
+            hydrahplib = diffarr[1];
+            playerhplib = diffarr[0];
         }
     }
 }
