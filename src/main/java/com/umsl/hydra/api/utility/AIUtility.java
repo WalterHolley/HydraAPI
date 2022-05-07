@@ -1,133 +1,122 @@
 package com.umsl.hydra.api.utility;
-import java.util.Scanner;
+import com.umsl.hydra.api.model.DifficultyEnum;
+
 import java.lang.Math;
 
 public class AIUtility {
 
-public static void roundstart(int difficulty){
-int count = 0;
-count++;
-System.out.println("Round: " + count);
+    public boolean wonRound(DifficultyEnum diff, int[] playerPattern){
+        int[] enemyPattern;
+        boolean result = false;
 
-System.out.println("Please choose your 3 coin pattern: ");
-Scanner scanner = new Scanner(System.in);
-int first = scanner.nextInt();
-int second = scanner.nextInt();
-int third = scanner.nextInt();
+        enemyPattern = getEnemyPattern(diff, playerPattern);
+        result = executeRound(playerPattern, enemyPattern);
 
-System.out.println("Your pattern is: " + first + " " + second + " " + third);
-    if (difficulty==0){
+        return result;
+    }
 
-    }
-    else if (difficulty==1){
-        System.out.println("You have selected medium as your difficulty");
-    }
-    else {
-        difficulty2(first, second, third);
-    }
-}
+    private int[] getEnemyPattern(DifficultyEnum difficulty, int[] playerPattern){
+        int[] enemyPattern;
 
-public static void difficulty0(int first, int second, int third){
-
-}
-public static void difficulty1(int first, int second, int third){
-
-}
-public static void difficulty2(int first, int second, int third){
-int aifirst;
-if(second==1) {
-    aifirst = 2;
-}
-else{
-    aifirst = 1;
-}
-int aisecond = first;
-int aithird = second;
-
-System.out.println("The hydras pattern is: " + aifirst + " " + aisecond + " " + aithird);
-
-boolean seq = true;
-    System.out.println("Randomly tossed coins: ");
-    int cpat = 3;
-    int pat1;
-    int pat2;
-    int pat3 = 0;
-    int pat4 = 0;
-    int pat5 = 0;
-while(true) {
-    pat1 = 0;
-    pat2 = 0;
-    if (cpat == 3) {
-        pat3 = (int) (Math.random() * 2 + 1);
-        pat4 = (int) (Math.random() * 2 + 1);
-        pat5 = (int) (Math.random() * 2 + 1);
-        System.out.print(pat3 + " " + pat4 + " " + pat5 + " ");
-    }
-    else if (cpat == 4) {
-        pat1 = pat4;
-        pat2 = pat5;
-        pat3 = (int) (Math.random() * 2 + 1);
-        pat4 = (int) (Math.random() * 2 + 1);
-        pat5 = (int) (Math.random() * 2 + 1);
-        System.out.print(pat3 + " " + pat4 + " " + pat5 + " ");
-    }
-    else if (cpat>5){
-        pat1 = pat4;
-        pat2 = pat5;
-        pat3 = (int) (Math.random() * 2 + 1);
-        pat4 = (int) (Math.random() * 2 + 1);
-        pat5 = (int) (Math.random() * 2 + 1);
-        System.out.print(pat3 + " " + pat4 + " " + pat5 + " ");
-    }
-    cpat++;
-    if (pat1 == first && pat2 == second && pat3 == third) {
-        System.out.println("");
-        System.out.println("You have won this round");
-        break;
-    }
-    else if (pat1 == aifirst && pat2 == aisecond && pat3 == aithird) {
-        System.out.println("");
-        System.out.println("The hydra won this round");
-        break;
-    }
-    else if (pat2 == first && pat3 == second && pat4 == third) {
-        System.out.println("");
-        System.out.println("You have won this round");
-        break;
-    }
-    else if (pat2 == aifirst && pat3 == aisecond && pat4 == aithird) {
-        System.out.println("");
-        System.out.println("The hydra won this round");
-        break;
-    }
-    else if (pat3 == first && pat4 == second && pat5 == third) {
-        System.out.println("");
-        System.out.println("You have won this round");
-        break;
-    }
-    else if (pat3 == aifirst && pat4 == aisecond && pat5 == aithird) {
-        System.out.println("");
-        System.out.println("The hydra won this round");
-        break;
-    }
-}
-}
-
-
-public static void main(String[] args){
-        Scanner scanner = new Scanner(System.in);
-    System.out.print("Please select difficulty(0-2): ");
-    int difficulty = scanner.nextInt();
-        if (difficulty==0){
-            System.out.println("You have selected easy as your difficulty");
+        switch(difficulty){
+            case HARD:
+                enemyPattern = getHardPattern(playerPattern);
+                break;
+            default:
+                enemyPattern = getRandomPattern();
         }
-        else if (difficulty==1){
-            System.out.println("You have selected medium as your difficulty");
-        }
-        else {
-            System.out.println("You have selected hard as your difficulty");
-        }
-    roundstart(difficulty);
 
-}
+        return enemyPattern;
+
+    }
+
+    /**
+     * Implements the pattern selection algorithm from Penney's game
+     * @param playerPattern the pattern provided by the player
+     * @return array of the most likely pattern to win against the player's selection
+     */
+    private int[] getHardPattern(int[] playerPattern){
+        int[] enemyPattern = playerPattern;
+        int swap;
+        enemyPattern[2] = enemyPattern[1];
+        if(enemyPattern[1] == 0)
+            swap = 1;
+        else
+            swap = 0;
+        enemyPattern[0] = swap;
+
+        return enemyPattern;
+
+    }
+
+    /**
+     * Gets a random 3 integer(1 or 0) pattern
+     * @return
+     */
+    private int[] getRandomPattern(){
+        int[] gamePattern = new int[3];
+        gamePattern[0] = (int) Math.floor(Math.random() * 2);
+        gamePattern[1] = (int) Math.floor(Math.random() * 2);
+        gamePattern[2] = (int) Math.floor(Math.random() * 2);
+
+        return gamePattern;
+    }
+
+    /**
+     * Plays a comparison game between two patterns
+     * @param playerPattern The player's pattern
+     * @param enemyPattern The enemy's pattern
+     * @return true if the player pattern wins, otherwise false.
+     */
+    private boolean executeRound(int[] playerPattern, int[] enemyPattern){
+        boolean isRunning = true;
+        boolean result = false;
+
+        int[] gamePattern = getRandomPattern();
+
+        while(isRunning){
+            //check for matching pattern
+            if(patternsMatch(playerPattern, gamePattern)){
+                isRunning = false;
+                result = true;
+
+            }
+            else if(patternsMatch(enemyPattern, gamePattern)){
+                isRunning = false;
+                result = false;
+            }
+            else{
+                //swap values
+                gamePattern[0] = gamePattern[1];
+                gamePattern[1] = gamePattern[2];
+                gamePattern[2] = (int)Math.floor(Math.random() * 2);
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Determines if two integer patterns match earch other
+     * @param pattern1
+     * @param pattern2
+     * @return true if both patterns match.  otherwise false
+     */
+    private boolean patternsMatch(int[] pattern1, int[] pattern2){
+        boolean result = true;
+        if(pattern1.length != pattern2.length)
+            result = false;
+        else{
+            for(int i = 0; i < pattern1.length; i++){
+                if(pattern1[i] != pattern2[i]){
+                    result = false;
+                    break;
+                }
+            }
+        }
+
+        return result;
+    }
+
+
 }
