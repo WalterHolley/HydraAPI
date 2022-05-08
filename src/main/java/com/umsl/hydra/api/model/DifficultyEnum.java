@@ -9,15 +9,18 @@ public enum DifficultyEnum {
     NORMAL(2),
     HARD(3);
 
-    private final int difficultyCode;
+    private int difficultyCode;
+    private DifficultyEnum difficultyEnum;
 
     private DifficultyEnum(int difficultyCode){
         this.difficultyCode = difficultyCode;
     }
 
     public int getDifficultyCode(){
-        return this.difficultyCode;
+        return difficultyEnum.difficultyCode;
     }
+
+
 
 
 }

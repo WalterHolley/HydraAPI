@@ -1,8 +1,10 @@
 package com.umsl.hydra.api.utility;
 import com.umsl.hydra.api.model.DifficultyEnum;
+import org.springframework.stereotype.Component;
 
 import java.lang.Math;
 
+@Component
 public class AIUtility {
 
     public boolean wonRound(DifficultyEnum diff, int[] playerPattern){

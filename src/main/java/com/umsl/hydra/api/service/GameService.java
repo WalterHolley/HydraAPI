@@ -4,10 +4,8 @@ AI Utility
 This is where the base functions for the game's decision making will be processed.
  */
 
-import com.umsl.hydra.api.model.DifficultyEnum;
-import com.umsl.hydra.api.model.GameConstants;
-import com.umsl.hydra.api.model.GameResponse;
-import com.umsl.hydra.api.model.StartGameRequest;
+import com.umsl.hydra.api.model.*;
+import com.umsl.hydra.api.utility.AIUtility;
 import com.umsl.hydra.api.utility.GameUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +17,9 @@ public class GameService {
 
     @Autowired
     private GameUtility gameUtility;
+
+    @Autowired
+    private AIUtility aiUtility;
 
     /**
      * Begins a game session
@@ -38,11 +39,35 @@ public class GameService {
 
     }
 
-    public GameResponse updateGameSession(HttpSession session, GameResponse response){
+    public GameResponse updateGameSession(HttpSession session, GameRequest request){
+        DifficultyEnum difficultyEnum;
+        //get game difficulty
+        difficultyEnum = gameUtility.getDifficultyByCode((int)session.getAttribute(GameConstants.SESSION_GAMEDIFFICULTY_KEY));
 
-        if(response. getEnemyHp() <= 0 || response.getPlayerHp() <= 0){
+        //get current game session stats
+        GameResponse response = getGameSession(session);
 
+        //get win decision from AI
+        if(aiUtility.wonRound(difficultyEnum, request.getDirectionSequence())){
+            //handle player win
 
+            if(request.getAction() == 1){
+                response.setEnemyHp(response.getEnemyHp() - GameConstants.BASE_PLAYER_ATK);
+            }
+            else{
+                response.setPlayerHp(response.getPlayerHp() + GameConstants.BASE_PLAYER_HEAL);
+            }
+
+        }
+        else{
+            //handle enemy win
+            response.setPlayerHp(response.getPlayerHp() - GameConstants.BASE_ENEMY_ATK);
+
+        }
+
+        if(response.getEnemyHp() <= 0 || response.getPlayerHp() <= 0){
+
+            response.setIsGameOver(true);
 
             if( response.getEnemyHp() <= 0){
                 //TODO: Check for high score candidate
@@ -52,8 +77,11 @@ public class GameService {
                 response.setPlayerWon(false);
             //end game session
             session.invalidate();
+
+            //check for high score
         }
         else{
+            response.setGameRound(response.getGameRound() + 1);
             session.setAttribute(GameConstants.SESSION_GAMEROUNDS_KEY, response.getGameRound());
             session.setAttribute(GameConstants.SESSION_PLAYERHP_KEY,response.getPlayerHp());
             session.setAttribute(GameConstants.SESSION_ENEMYHP_KEY, response.getEnemyHp());
@@ -62,6 +90,11 @@ public class GameService {
         return response;
     }
 
+    /**
+     * Retrieves game response representation of game session object
+     * @param session
+     * @return
+     */
     public GameResponse getGameSession(HttpSession session){
         GameResponse response = new GameResponse();
 
@@ -81,7 +114,9 @@ public class GameService {
         //create response object
         response.setEnemyHp(GameConstants.BASE_ENEMY_HP);
         response.setPlayerHp(GameConstants.BASE_PLAYER_HP);
+        response.setGameRound(1);
         response.setPlayerWon(false);
+        response.setIsGameOver(false);
 
         return  response;
     }
@@ -93,7 +128,7 @@ public class GameService {
      */
     private void initGameSession(HttpSession session, GameResponse game, StartGameRequest startRequest){
 
-        session.setAttribute(GameConstants.SESSION_GAMEROUNDS_KEY, 0);
+        session.setAttribute(GameConstants.SESSION_GAMEROUNDS_KEY, game.getGameRound());
         session.setAttribute(GameConstants.SESSION_PLAYERHP_KEY,game.getPlayerHp());
         session.setAttribute(GameConstants.SESSION_ENEMYHP_KEY, game.getEnemyHp());
         session.setAttribute(GameConstants.SESSION_PLAYERWON_KEY, game.getPlayerWon());
@@ -101,7 +136,4 @@ public class GameService {
 
     }
 
-    private void UpdateGameSession(HttpSession session, GameResponse game){
-
-    }
 }

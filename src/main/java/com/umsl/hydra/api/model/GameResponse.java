@@ -12,6 +12,7 @@ public class GameResponse {
     private int _enemyHp;
     private int _gameRound;
     private boolean _playerWon;
+    private boolean _isGameOver;
     private DifficultyEnum _difficulty;
 
     /**
@@ -21,6 +22,12 @@ public class GameResponse {
     public void setPlayerWon(boolean playerWon){
         _playerWon = playerWon;
     }
+
+    /**
+     * set value indicating the game has ended
+     * @param gameIsOver
+     */
+    public void setIsGameOver(boolean gameIsOver){_isGameOver = gameIsOver;}
 
     /**
      * Set a value for the player's HP
@@ -97,6 +104,12 @@ public class GameResponse {
     public boolean getPlayerWon(){
         return _playerWon;
     }
+
+    /**
+     * Returns value indicating if the current game has ended
+     * @return
+     */
+    public boolean getIsGameOver(){return _isGameOver;}
 
 
 }
