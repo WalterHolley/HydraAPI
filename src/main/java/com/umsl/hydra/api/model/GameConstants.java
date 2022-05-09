@@ -7,6 +7,7 @@ public class GameConstants {
     public static final int BASE_ENEMY_ATK = 1;
     public static final int BASE_PLAYER_ATK = 1;
     public static final int BASE_PLAYER_HEAL = 2;
+    public static final int LOWEST_SCORE_RANK = 10;
 
     //session keys
     public static final String SESSION_ENEMYHP_KEY = "enemyHp";
@@ -15,5 +16,6 @@ public class GameConstants {
     public static final String SESSION_PLAYERWON_KEY = "playerWon";
     public static final String SESSION_GAMEDIFFICULTY_KEY = "difficulty";
     public static final String SESSION_GAMEOVER_KEY = "isGameOver";
+    public static final String SESSION_PLAYERNAME_KEY = "playerName";
 
 }

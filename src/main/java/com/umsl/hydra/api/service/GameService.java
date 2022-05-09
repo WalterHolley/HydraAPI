@@ -19,6 +19,9 @@ public class GameService {
     private GameUtility gameUtility;
 
     @Autowired
+    private HighScoreService highScoreService;
+
+    @Autowired
     private AIUtility aiUtility;
 
     /**
@@ -70,7 +73,10 @@ public class GameService {
             response.setIsGameOver(true);
 
             if( response.getEnemyHp() <= 0){
-                //TODO: Check for high score candidate
+                //create score(if needed)
+                highScoreService.put(highScoreService.createScore(gameUtility.getCodeByDifficulty(response.getDifficulty()),
+                        response.getGameRound(), response.getPlayerName()));
+
                 response.setPlayerWon(true);
             }
             else
@@ -78,7 +84,7 @@ public class GameService {
             //end game session
             session.invalidate();
 
-            //check for high score
+
         }
         else{
             response.setGameRound(response.getGameRound() + 1);
@@ -104,6 +110,7 @@ public class GameService {
         response.setPlayerWon((boolean)session.getAttribute(GameConstants.SESSION_PLAYERWON_KEY));
         response.setPlayerHp((int) session.getAttribute(GameConstants.SESSION_PLAYERHP_KEY));
         response.setEnemyHp((int) session.getAttribute(GameConstants.SESSION_ENEMYHP_KEY));
+        response.setPlayerName((String)session.getAttribute(GameConstants.SESSION_PLAYERNAME_KEY));
 
         return response;
     }
@@ -133,6 +140,7 @@ public class GameService {
         session.setAttribute(GameConstants.SESSION_ENEMYHP_KEY, game.getEnemyHp());
         session.setAttribute(GameConstants.SESSION_PLAYERWON_KEY, game.getPlayerWon());
         session.setAttribute(GameConstants.SESSION_GAMEDIFFICULTY_KEY, startRequest.getDifficultyCode());
+        session.setAttribute(GameConstants.SESSION_PLAYERNAME_KEY, startRequest.getPlayerName());
 
     }
 

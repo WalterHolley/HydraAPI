@@ -14,6 +14,7 @@ public class GameResponse {
     private boolean _playerWon;
     private boolean _isGameOver;
     private DifficultyEnum _difficulty;
+    private String _playerName;
 
     /**
      * Set value indicating if the player won the current round
@@ -64,6 +65,13 @@ public class GameResponse {
     }
 
     /**
+     * Sets the player's name
+     * @param playerName
+     */
+    @JsonIgnore
+    public void setPlayerName(String playerName){_playerName = playerName;}
+
+    /**
      * Retrieves HP of the player
      * @return HP Value
      */
@@ -110,6 +118,13 @@ public class GameResponse {
      * @return
      */
     public boolean getIsGameOver(){return _isGameOver;}
+
+    /**
+     * Returns the player's name
+     * @return
+     */
+    @JsonIgnore
+    public String getPlayerName(){ return _playerName; }
 
 
 }

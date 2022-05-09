@@ -25,4 +25,20 @@ public class GameUtility {
 
         return difficultyEnum;
     }
+
+    public int getCodeByDifficulty(DifficultyEnum difficultyEnum){
+        int result;
+        switch (difficultyEnum){
+            case EASY:
+                result = 1;
+                break;
+            case NORMAL:
+                result = 2;
+                break;
+            default:
+                result = 3;
+        }
+
+        return result;
+    }
 }
