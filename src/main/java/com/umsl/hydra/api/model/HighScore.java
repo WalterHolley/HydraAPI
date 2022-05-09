@@ -1,6 +1,6 @@
 package com.umsl.hydra.api.model;
 
-public class HighScore implements  IDomainObject{
+public class HighScore implements  IDomainObject, Comparable<HighScore>{
     private String _playerName;
     private int _difficulty;
     private int _rounds;
@@ -41,5 +41,15 @@ public class HighScore implements  IDomainObject{
     @Override
     public String getObjectKey() {
         return OBJECT_KEY;
+    }
+
+    @Override
+    public int compareTo(HighScore o) {
+        int result = -1;
+        if(this.getDifficulty() < o.getDifficulty())
+            result = 1;
+        else if((this.getDifficulty() == o.getDifficulty()) && (this.getRounds() > o.getRounds()))
+            result = 1;
+        return result;
     }
 }

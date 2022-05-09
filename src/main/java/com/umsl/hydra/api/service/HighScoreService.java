@@ -73,7 +73,9 @@ public class HighScoreService implements Repository<HighScore> {
 
     public HighScoreResponse getHighScores(){
         HighScoreResponse response = new HighScoreResponse();
-        response.setHighScoreList(getItems());
+        List<HighScore> scores = getItems();
+        Collections.sort(scores);
+        response.setHighScoreList(scores);
         return response;
     }
 
