@@ -88,7 +88,7 @@ public class HighScoreService implements Repository<HighScore> {
             }
             else{
                 scores.add(score);
-                Collections.sort(scores, new SortHighScores());
+                Collections.sort(scores);
                 if(scores.get(GameConstants.LOWEST_SCORE_RANK) != score){
                     result = true;
                 }
